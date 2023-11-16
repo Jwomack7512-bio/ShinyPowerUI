@@ -1,0 +1,8 @@
+br() function that can enter number of spacings. (becuase doing br() 3-5 times is ugly)
+
+hr() with styling options
+
+titlePanel from pahMOdels
+
+we learned how to play with the translate fxn to move title around, apply to titlepanel and hrtitle.
+title_align but have custom translate_x, translate_y to override.

@@ -30,16 +30,45 @@ This function provides a custom table layout for arranging Shiny widgets with th
 if (interactive()) {
   library(shiny)
 
-  ui <- fluidPage(
-    tableLayout(
-      textInput(inputId = "text1", label = "First Input", value = "Example"),
-      checkboxInput(inputId = "check1", label = "A Checkbox", value = TRUE)
+
+ui <- fluidPage(
+  titlePanel("Table Layout Example"),
+
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("fontSize", "Font Size:", choices = c("14px", "16px", "18px")),
+      selectInput("paddingBottom", "Padding Bottom:", choices = c("5px", "10px", "15px")),
+      checkboxInput("isBold", "Bold Labels", value = TRUE)
+    ),
+
+    mainPanel(
+      uiOutput("tableOutput")
     )
   )
+)
 
-  server <- function(input, output, session) {}
+server <- function(input, output) {
 
-  shinyApp(ui, server)
+  output$tableOutput <- renderUI({
+    tableLayout(
+
+      textInput(inputId = "PI_CC_reactants", label = "Reactants", value = "", placeholder = "x1, x2"),
+      selectInput(inputId = "PI_CC_products",
+                  label = "Products",
+                  choices = c("a", "b", "c")),
+      checkboxInput(inputId = "PI_CC_modifiers",
+                    label = "Modifiers",
+                    value = TRUE),
+      numericInput("test1", "numebers", value = 3),
+      fontSize = input$fontSize,
+      paddingBottom = input$paddingBottom,
+      isBold = input$isBold
+    )
+  })
+
+}
+
+shinyApp(ui = ui, server = server)
 }
 
 }
