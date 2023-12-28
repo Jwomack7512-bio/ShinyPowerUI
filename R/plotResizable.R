@@ -8,6 +8,9 @@
 #'
 #' @return A Shiny UI element (HTML tags) that wraps the provided plot output, making it resizable.
 #'
+#' @importFrom shiny tags
+#' @importFrom shiny HTML
+#'
 #' @examples
 #' \dontrun{
 #' library(shiny)
@@ -33,8 +36,7 @@
 #' shinyApp(ui = ui, server = server)
 #' }
 #'
-#' @importFrom shiny tags
-#' @importFrom shiny HTML
+
 #' @export
 plotResizable <- function(plot_output,
                           autoResizeWithWindow = TRUE,

@@ -26,3 +26,28 @@ addContextMenu(
 \description{
 Add a context menu to a UI element
 }
+\examples{
+\dontrun{
+  library(shiny)
+
+  ui <- fluidPage(
+    titlePanel("Context Menu Example"),
+    mainPanel(
+      actionButton("myButton", "Right-click Me!")
+    )
+  )
+
+  server <- function(input, output) {
+    menu_items <- data.frame(name = c("Option 1", "Option 2", "Option 3"),
+                             id = c("opt1", "opt2", "opt3"))
+
+    addContextMenu("myButton", menu_items,
+                   itemPadding = '5px',
+                   itemFontSize = '14px',
+                   menuWidth = 'auto')
+  }
+
+  shinyApp(ui, server)
+}
+
+}

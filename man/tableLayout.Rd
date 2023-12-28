@@ -15,16 +15,20 @@ tableLayout(
 \arguments{
 \item{...}{Shiny UI input elements.}
 
-\item{firstColWidth}{The width of the first column (for the labels). If NULL, uses adaptive CSS.}
+\item{firstColWidth}{The width of the first column (for the labels).
+If NULL, uses adaptive CSS.}
 
 \item{fontSize}{The font size for the label text. Default is "16px".}
 
-\item{paddingBottom}{The padding at the bottom of the label text. Default is "15px".}
+\item{paddingBottom}{The padding at the bottom of the label text.
+Default is "15px".}
 
-\item{isBold}{Logical; If TRUE, the label text is displayed in bold. Default is TRUE.}
+\item{isBold}{Logical; If TRUE, the label text is displayed in bold.
+Default is TRUE.}
 }
 \description{
-This function provides a custom table layout for arranging Shiny widgets with their associated labels.
+This function provides a custom table layout for arranging Shiny widgets
+with their associated labels.
 }
 \examples{
 if (interactive()) {
@@ -36,8 +40,10 @@ ui <- fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      selectInput("fontSize", "Font Size:", choices = c("14px", "16px", "18px")),
-      selectInput("paddingBottom", "Padding Bottom:", choices = c("5px", "10px", "15px")),
+      selectInput("fontSize", "Font Size:",
+      choices = c("14px", "16px", "18px")),
+      selectInput("paddingBottom", "Padding Bottom:",
+      choices = c("5px", "10px", "15px")),
       checkboxInput("isBold", "Bold Labels", value = TRUE)
     ),
 
@@ -52,7 +58,8 @@ server <- function(input, output) {
   output$tableOutput <- renderUI({
     tableLayout(
 
-      textInput(inputId = "PI_CC_reactants", label = "Reactants", value = "", placeholder = "x1, x2"),
+      textInput(inputId = "PI_CC_reactants", label = "Reactants",
+      value = "", placeholder = "x1, x2"),
       selectInput(inputId = "PI_CC_products",
                   label = "Products",
                   choices = c("a", "b", "c")),

@@ -18,7 +18,7 @@
 #' @param border_type Type of the panel border. Default is "solid".
 #' @param margin_top Top margin for the panel. Default is "20px".
 #' @return A shiny tag list containing the custom panel and its styles.
-#' @export
+#'
 #' @examples
 #' \dontrun{
 #' titlePanel(
@@ -37,6 +37,7 @@
 #'     margin_top = "15px"
 #' )
 #' }
+#' @export
 titlePanel <- function(..., title = NULL, bg_color = NULL,
                        header_font = "Arial", header_weight = "normal",
                        header_font_size = "18px", header_color = "grey",
@@ -101,22 +102,3 @@ titlePanel <- function(..., title = NULL, bg_color = NULL,
   )
 }
 
-#' Example Usage:
-#'
-#' titlePanel(
-#'     sliderInput("slider1", "Slider Input:", min = 0, max = 100, value = 50),
-#'     textInput("text1", "Text Input:"),
-#'     title = "Custom Title",
-#'     bg_color = "red",
-#'     header_font = "Times New Roman",
-#'     header_weight = "bold",
-#'     header_font_size = "24px",
-#'     header_color = "blue",
-#'     panel_id = "myCustomID",  # User-defined ID
-#'     border_thickness = "2px",
-#'     border_color = "blue",
-#'     border_type = "dashed",
-#'     margin_top = "15px"
-#' )
-#'
-#'
