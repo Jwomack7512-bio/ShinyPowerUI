@@ -70,119 +70,90 @@ resizableSidebarLayout <- function(
 
   initialOpacity <- ifelse(hideBarByDefault, 0, 1)
 
-  shiny::tagList(
-    shiny::tags$head(
-      shiny::tags$style(shiny::HTML(
-        paste0("
-          #", containerID, " {
-            display: flex;
-            width: 100%;
-            min-height: 90vh;
-          }
+  tagList(
+    tags$head(
+      tags$link(
+        rel = "stylesheet",
+        href = "https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+      tags$style(HTML(
+        "
+        #container {
+          display: flex;
+          width: 100%;
+          height: 90vh;
+        }
 
-          #", leftPaneID, ", #", rightPaneID, " {
-            overflow-y: auto;
-            overflow-x: hidden;
-          }
+        #leftPane {
+          width: 30%;
+          height: 100%;
+          overflow: hidden;
+          padding: 5px;
+        }
 
-          #", leftPaneID, " {
-            width: 30%;
-            padding-right: 0px;
-            padding-left: 0px;
-          }
+        #toggleButton {
+          width: 20px;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          background-color: ", bgColorBtn, ";
+          transition: background-color 0.3s, font-size 0.3s;  /* Add smooth transitions */
+        }
 
-          #", toggleButtonID, " {
-            width: 20px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            opacity: ", initialOpacity, ";
-            transition: opacity 0.3s, background-color 0.3s, font-size 0.3s;
-          }
+        #toggleButton:hover {
+          background-color: #b5b5b5;  /* Change color on hover */
+          font-size: 20px;  /* Increase size on hover */
+        }
 
-          #", toggleButtonID, ":hover, #", toggleButtonID, ".collapsed {
-            opacity: 1;
-          }
-
-          #", toggleButtonID, ":hover {
-            background-color: #b5b5b5;
-            font-size: 20px;
-          }
-
-          #", rightPaneID, " {
-            flex-grow: 1;
-            padding-right: 0px;
-            padding-left: 0px;
-          }
-
-          /* Media query for screens less than 768 pixels wide */
-          @media (max-width: 768px) {
-            #", leftPaneID, ", #", rightPaneID, " {
-              width: 100% !important;
-            }
-            #", toggleButtonID, " {
-              display: none;
-            }
-            #", containerID, " {
-              flex-direction: column;
-            }
-          }
-        ")
+        #rightPane {
+          flex-grow: 1;
+          height: 100%;
+          padding: 5px;
+          overflow: hidden;
+        }
+        "
       ))
     ),
 
-    shiny::div(id = containerID,
-               shiny::div(id = leftPaneID, sidebarContent),
-               shiny::div(id = toggleButtonID,
-            style = paste0("background-color:", bgColorBtn, ";"), "<-"),
-            shiny::div(id = rightPaneID, mainContent)
+    div(id = "container",
+        div(id = "leftPane", sidebarContent),
+        div(id = "toggleButton", "⬅"),
+        div(id = "rightPane", mainContent)
     ),
 
-    shiny::tags$script(shiny::HTML(
-      sprintf("
-        $(document).ready(function() {
-          var isCollapsed = false;
-          $('#%s').click(function() {
-            if (!isCollapsed) {
-              $('#%s').hide();
-              $('#%s').html('->').addClass('collapsed');
-              isCollapsed = true;
-            } else {
-              $('#%s').show();
-              $('#%s').css('width', '30%%');
-              $('#%s').css('width', '70%%');
-              $('#%s').html('<-).removeClass('collapsed');
-              isCollapsed = false;
-            }
-            $(window).trigger('resize');
-          });
-
-          $('#%s').resizable({
-            handles: 'e',
-            resize: function(event, ui) {
-              var remainingSpace = $('#%s').width() - ui.size.width,
-                  divTwo = $('#%s'),
-                  divTwoWidth = remainingSpace - (divTwo.outerWidth() -
-                                       divTwo.width()) - $('#%s').outerWidth();
-              divTwo.css('width', divTwoWidth + 'px');
-            }
-          });
+    tags$script(HTML(
+      "
+      $(document).ready(function() {
+        var isCollapsed = false;
+        $('#toggleButton').click(function() {
+          if (!isCollapsed) {
+            $('#leftPane').hide();
+            $('#toggleButton').html('➡');
+            isCollapsed = true;
+          } else {
+            $('#leftPane').show();
+            $('#leftPane').css('width', '30%');  // Reset width to 30% on expand
+            $('#rightPane').css('width', '70%'); // Reset width to 70% on expand
+            $('#toggleButton').html('⬅');
+            isCollapsed = false;
+          }
+          // Trigger Shiny to resize the outputs
+          $(window).trigger('resize');
         });
-      ",
-      toggleButtonID,
-      leftPaneID,
-      toggleButtonID,
-      leftPaneID,
-      leftPaneID,
-      rightPaneID,
-      toggleButtonID,
-      leftPaneID,
-      containerID,
-      rightPaneID,
-      toggleButtonID
-      ))
-    )
+
+        $('#leftPane').resizable({
+          handles: 'e',
+          resize: function(event, ui) {
+            var remainingSpace = $('#container').width() - ui.size.width,
+                divTwo = $('#rightPane'),
+                divTwoWidth = remainingSpace - (divTwo.outerWidth() - divTwo.width()) - $('#toggleButton').outerWidth();
+            divTwo.css('width', divTwoWidth + 'px');
+          }
+        });
+      });
+      "
+    ))
   )
 }
