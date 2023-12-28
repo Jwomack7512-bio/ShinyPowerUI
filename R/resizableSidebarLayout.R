@@ -13,7 +13,7 @@
 #'
 #' @param sidebarContent UI elements to be placed inside the sidebar.
 #' @param mainContent UI elements to be placed in the main content area.
-#' @param bgColorBtn (optional) Allows customization of the toggle button's
+#' @param barColor (optional) Allows customization of the toggle button's
 #'   background color.
 #' @param arrowSize (optional) Size of the arrow in the toggle button.
 #' @param hideBarByDefault (optional) Boolean indicating whether the sidebar
@@ -36,7 +36,7 @@
 #'     shiny::tags$h3("Main Content"),
 #'     plotOutput("plot")
 #'   ),
-#'   bgColorBtn = "#3498db",
+#'   barColor = "#3498db",
 #'   arrowSize = "large",
 #'   hideBarByDefault = FALSE
 #' )
@@ -54,9 +54,9 @@
 resizableSidebarLayout <- function(
     sidebarContent,
     mainContent,
-    bgColorBtn = "#e9e9e9",
+    barColor = "#e9e9e9",
     arrowSize = "default",
-    hideBarByDefault = TRUE
+    hideBar = FALSE
 ) {
 
   # Generate a unique ID suffix
@@ -68,7 +68,7 @@ resizableSidebarLayout <- function(
   toggleButtonID <- paste0("toggleButton", idSuffix)
   rightPaneID <- paste0("rightPane", idSuffix)
 
-  initialOpacity <- ifelse(hideBarByDefault, 0, 1)
+  initialOpacity <- ifelse(hideBar, 0, 1)
 
   tagList(
     tags$head(
@@ -100,12 +100,14 @@ resizableSidebarLayout <- function(
             align-items: center;
             justify-content: flex-start;
             background-color: %s;
+            opacity: %s;
             transition: background-color 0.3s, font-size 0.3s;  /* Add smooth transitions */
           }
 
           #%s:hover {
             background-color: #b5b5b5;  /* Change color on hover */
             font-size: 20px;  /* Increase size on hover */
+            opacity: 1;
           }
 
           #%s {
@@ -115,7 +117,8 @@ resizableSidebarLayout <- function(
             overflow: hidden;
           }
           ",
-          containerID, leftPaneID, toggleButtonID, bgColorBtn, toggleButtonID, rightPaneID
+          containerID, leftPaneID, toggleButtonID, barColor,
+          initialOpacity, toggleButtonID, rightPaneID
         )
       ))
     ),
