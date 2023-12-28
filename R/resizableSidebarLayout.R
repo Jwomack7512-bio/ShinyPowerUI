@@ -81,7 +81,7 @@ resizableSidebarLayout <- function(
         #container {
           display: flex;
           width: 100%;
-          height: 90vh;
+          height: 100%;
         }
 
         #leftPane {
