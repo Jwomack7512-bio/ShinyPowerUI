@@ -77,83 +77,91 @@ resizableSidebarLayout <- function(
         href = "https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
       tags$style(HTML(
-        "
-        #container {
-          display: flex;
-          width: 100%;
-          height: 100%;
-        }
+        sprintf(
+          "
+          #%s {
+            display: flex;
+            width: 100%%;
+            height: 100%%;
+          }
 
-        #leftPane {
-          width: 30%;
-          height: 100%;
-          overflow: hidden;
-          padding: 5px;
-        }
+          #%s {
+            width: 30%%;
+            height: 100%%;
+            overflow: hidden;
+            padding: 5px;
+          }
 
-        #toggleButton {
-          width: 20px;
-          cursor: pointer;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
-          background-color: ", bgColorBtn, ";
-          transition: background-color 0.3s, font-size 0.3s;  /* Add smooth transitions */
-        }
+          #%s {
+            width: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: %s;
+            transition: background-color 0.3s, font-size 0.3s;  /* Add smooth transitions */
+          }
 
-        #toggleButton:hover {
-          background-color: #b5b5b5;  /* Change color on hover */
-          font-size: 20px;  /* Increase size on hover */
-        }
+          #%s:hover {
+            background-color: #b5b5b5;  /* Change color on hover */
+            font-size: 20px;  /* Increase size on hover */
+          }
 
-        #rightPane {
-          flex-grow: 1;
-          height: 100%;
-          padding: 5px;
-          overflow: hidden;
-        }
-        "
+          #%s {
+            flex-grow: 1;
+            height: 100%%;
+            padding: 5px;
+            overflow: hidden;
+          }
+          ",
+          containerID, leftPaneID, toggleButtonID, bgColorBtn, toggleButtonID, rightPaneID
+        )
       ))
     ),
 
-    div(id = "container",
-        div(id = "leftPane", sidebarContent),
-        div(id = "toggleButton", "⬅"),
-        div(id = "rightPane", mainContent)
+    div(id = containerID,
+        div(id = leftPaneID, sidebarContent),
+        div(id = toggleButtonID, "⬅"),
+        div(id = rightPaneID, mainContent)
     ),
 
     tags$script(HTML(
-      "
-      $(document).ready(function() {
-        var isCollapsed = false;
-        $('#toggleButton').click(function() {
-          if (!isCollapsed) {
-            $('#leftPane').hide();
-            $('#toggleButton').html('➡');
-            isCollapsed = true;
-          } else {
-            $('#leftPane').show();
-            $('#leftPane').css('width', '30%');  // Reset width to 30% on expand
-            $('#rightPane').css('width', '70%'); // Reset width to 70% on expand
-            $('#toggleButton').html('⬅');
-            isCollapsed = false;
-          }
-          // Trigger Shiny to resize the outputs
-          $(window).trigger('resize');
-        });
-
-        $('#leftPane').resizable({
-          handles: 'e',
-          resize: function(event, ui) {
-            var remainingSpace = $('#container').width() - ui.size.width,
-                divTwo = $('#rightPane'),
-                divTwoWidth = remainingSpace - (divTwo.outerWidth() - divTwo.width()) - $('#toggleButton').outerWidth();
-            divTwo.css('width', divTwoWidth + 'px');
-          }
-        });
+      sprintf(
+        "
+    $(document).ready(function() {
+      var isCollapsed%s = false;
+      $('#%s').click(function() {
+        if (!isCollapsed%s) {
+          $('#%s').hide();
+          $('#%s').html('➡');
+          isCollapsed%s = true;
+        } else {
+          $('#%s').show();
+          $('#%s').css('width', '30%%');  // Reset width to 30%% on expand
+          $('#%s').css('width', '70%%'); // Reset width to 70%% on expand
+          $('#%s').html('⬅');
+          isCollapsed%s = false;
+        }
+        // Trigger Shiny to resize the outputs
+        $(window).trigger('resize');
       });
-      "
+
+      $('#%s').resizable({
+        handles: 'e',
+        resize: function(event, ui) {
+          var remainingSpace = $('#%s').width() - ui.size.width,
+              divTwo = $('#%s'),
+              divTwoWidth = remainingSpace - (divTwo.outerWidth() - divTwo.width()) - $('#%s').outerWidth();
+          divTwo.css('width', divTwoWidth + 'px');
+        }
+      });
+    });
+    ",
+    idSuffix, toggleButtonID, idSuffix, leftPaneID, toggleButtonID, idSuffix,
+    leftPaneID, rightPaneID, rightPaneID, toggleButtonID, idSuffix, toggleButtonID, leftPaneID, rightPaneID, toggleButtonID
+      )
     ))
+
   )
 }
