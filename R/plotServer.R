@@ -7,6 +7,11 @@
 #' @param session The Shiny session object.
 #' @param plot_obj A function that returns a ggplot2 plot object.
 #'
+#' @importFrom shiny reactiveValues renderPlot observeEvent showModal modalDialog radioButtons hr fluidRow column
+#' @importFrom shiny textInput numericInput selectInput sliderInput checkboxInput actionButton conditionalPanel
+#' @importFrom ggplot2 ggtitle theme xlab ylab scale_x_continuous scale_y_continuous
+#' @importFrom ggplot2 element_text
+#'
 #' @examples
 #' \dontrun{
 #' library(shiny)
@@ -57,7 +62,7 @@ plotServer <- function(input,
                        plot_obj) {
 
   # Process Plot Object
-  labels <- reactiveValues(
+  labels <- shiny::reactiveValues(
     x = list(
       text = "x",
       size = 14,
@@ -95,7 +100,7 @@ plotServer <- function(input,
   )
 
   # Render plot from input object
-  output$plot <- renderPlot({
+  output$plot <- shiny::renderPlot({
     p <- plot_obj()
 
     # IF gtable, return
@@ -104,7 +109,7 @@ plotServer <- function(input,
     }
 
     if (!labels$x$text.override) {
-      if (!isTruthy(p$labels$x)) {
+      if (!shiny::isTruthy(p$labels$x)) {
         labels$x$text <- "x"
       } else {
         labels$x$text <- p$labels$x
@@ -112,7 +117,7 @@ plotServer <- function(input,
     }
 
     if (!labels$y$text.override) {
-      if (!isTruthy(p$labels$y)) {
+      if (!shiny::isTruthy(p$labels$y)) {
         labels$y$text <- "y"
       } else {
         labels$y$text <- p$labels$y
@@ -120,7 +125,7 @@ plotServer <- function(input,
     }
 
     if (!labels$title$text.override) {
-      if (!isTruthy(p$labels$title)) {
+      if (!shiny::isTruthy(p$labels$title)) {
         labels$title$text <- ""
       } else {
         labels$title$text <- p$labels$title
@@ -128,8 +133,8 @@ plotServer <- function(input,
     }
 
     # Title Settings -----------------------------------------------------------
-    p <- p + ggtitle(labels$title$text)
-    p <- p + theme(plot.title = element_text(
+    p <- p + ggplot2::ggtitle(labels$title$text)
+    p <- p + ggplot2::theme(plot.title = ggplot2::element_text(
       size = labels$title$size,
       face = labels$title$weight,
       hjust = labels$title$axisPosition,
@@ -138,41 +143,41 @@ plotServer <- function(input,
 
     # x-axis Settings ----------------------------------------------------------
     lab.x <- labels$x
-    p <- p + xlab(labels$x$text)
-    p <- p + theme(
-      axis.title.x = element_text(
+    p <- p + ggplot2::xlab(labels$x$text)
+    p <- p + ggplot2::theme(
+      axis.title.x = ggplot2::element_text(
         size = labels$x$size,
         face = labels$x$weight,
         hjust = labels$x$axisPosition,
         vjust = labels$x$axisPositionPadding
       ),
-      axis.text.x = element_text(size = labels$x$labelSize)
+      axis.text.x = ggplot2::element_text(size = labels$x$labelSize)
     )
 
     if (labels$x$axis.override) {
       p <- p +
-        scale_x_continuous(
+        ggplot2::scale_x_continuous(
           limits = c(labels$x$min,  labels$x$max),
           breaks = seq(labels$x$min, labels$x$max, by = labels$x$breaks)
         )
     }
 
     # y-axis settings ----------------------------------------------------------
-    p <- p + ylab(labels$y$text)
-    p <- p + theme(
-      axis.title.y = element_text(
+    p <- p + ggplot2::ylab(labels$y$text)
+    p <- p + ggplot2::theme(
+      axis.title.y = ggplot2::element_text(
         size = labels$y$size,
         face = labels$y$weight,
         hjust = labels$y$axisPosition,
         vjust = labels$y$axisPositionPadding
       ),
-      axis.text.y = element_text(size = labels$y$labelSize)
+      axis.text.y = ggplot2::element_text(size = labels$y$labelSize)
 
     )
 
     if (labels$y$axis.override) {
       p <- p +
-        scale_y_continuous(
+        ggplot2::scale_y_continuous(
           limits = c(labels$y$min,  labels$y$max),
           breaks = seq(labels$y$min, labels$y$max, by = labels$y$breaks)
         )
@@ -181,7 +186,7 @@ plotServer <- function(input,
   })
 
   # Change x label when double click is detected
-  observeEvent(input$label_edit, {
+  shiny::observeEvent(input$label_edit, {
     label.to.edit <- switch(
       input$label_edit$zone,
       "x" = "x",
@@ -193,10 +198,10 @@ plotServer <- function(input,
     if (class(plot_obj())[1] == "gtable") {
       return(NULL)
     }
-    showModal(
-      modalDialog(
+    shiny::showModal(
+      shiny::modalDialog(
         title = "Edit Plot",
-        radioButtons(
+        shiny::radioButtons(
           inputId = session$ns("RB_edit_render"),
           label = "Edit",
           choices = c("x-axis" = "x",
@@ -205,32 +210,32 @@ plotServer <- function(input,
           selected = label.to.edit,
           inline = TRUE
         ),
-        hr(),
+        shiny::hr(),
         # x-axis UI ------------------------------------------------------------
-        conditionalPanel(
+        shiny::conditionalPanel(
           condition = "input.RB_edit_render == 'x'", ns = session$ns,
-          fluidRow(
-            column(
+          shiny::fluidRow(
+            shiny::column(
               width = 6,
-              textInput(
+              shiny::textInput(
                 inputId = session$ns("newLabel_x"),
                 label = "X Label Text",
                 value = labels$x$text
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("fontSize_x"),
                 label = "Font Size",
                 value = labels$x$size,
                 min = 8,
                 max = 36
               ),
-              selectInput(
+              shiny::selectInput(
                 inputId = session$ns("fontWeight_x"),
                 label = "Font Weight",
                 choices = c("plain", "bold", "italic", "bold.italic"),
                 selected = labels$x$weight
               ),
-              sliderInput(
+              shiny::sliderInput(
                 inputId = session$ns("axisPosition_x"),
                 label = "Position on main axis",
                 value = labels$x$axisPosition,
@@ -238,7 +243,7 @@ plotServer <- function(input,
                 max = 1,
                 step = 0.05
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("axisPositionPadding_x"),
                 label = "Padding on Axis",
                 value = labels$x$axisPositionPadding,
@@ -247,33 +252,33 @@ plotServer <- function(input,
                 step = 0.5
               )
             ),
-            column(
+            shiny::column(
               width = 6,
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("axisLabelSize_x"),
                 label = "Axis Label Size",
                 value = labels$x$labelSize,
                 min = 8,
                 max = 36
               ),
-              checkboxInput(
+              shiny::checkboxInput(
                 inputId = session$ns("override_axis_x"),
                 label = "Override Axis?",
                 value = labels$x$axis.override
               ),
-              conditionalPanel(
+              shiny::conditionalPanel(
                 condition = "input.override_axis_x", ns = session$ns,
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisMin_x"),
                   label = "Axis Min",
                   value = labels$x$min
                 ),
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisMax_x"),
                   label = "Axis Max",
                   value = labels$x$max
                 ),
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisBreak_x"),
                   label = "Axis Breaks",
                   value = labels$x$breaks
@@ -283,30 +288,30 @@ plotServer <- function(input,
           )
         ),
         # y-axis UI ------------------------------------------------------------
-        conditionalPanel(
+        shiny::conditionalPanel(
           condition = "input.RB_edit_render == 'y'", ns = session$ns,
-          fluidRow(
-            column(
+          shiny::fluidRow(
+            shiny::column(
               width = 6,
-              textInput(
+              shiny::textInput(
                 inputId = session$ns("newLabel_y"),
                 label = "Y Label Text",
                 value = labels$y$text
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("fontSize_y"),
                 label = "Font Size",
                 value = labels$y$size,
                 min = 8,
                 max = 36
               ),
-              selectInput(
+              shiny::selectInput(
                 inputId = session$ns("fontWeight_y"),
                 label = "Font Weight",
                 choices = c("plain", "bold", "italic", "bold.italic"),
                 selected = labels$y$weight
               ),
-              sliderInput(
+              shiny::sliderInput(
                 inputId = session$ns("axisPosition_y"),
                 label = "Position on main axis",
                 value = labels$y$axisPosition,
@@ -314,7 +319,7 @@ plotServer <- function(input,
                 max = 1,
                 step = 0.05
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("axisPositionPadding_y"),
                 label = "Padding on Axis",
                 value = labels$y$axisPositionPadding,
@@ -323,33 +328,33 @@ plotServer <- function(input,
                 step = 0.5
               )
             ),
-            column(
+            shiny::column(
               width = 6,
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("axisLabelSize_y"),
                 label = "Axis Label Size",
                 value = labels$y$labelSize,
                 min = 8,
                 max = 36
               ),
-              checkboxInput(
+              shiny::checkboxInput(
                 inputId = session$ns("override_axis_y"),
                 label = "Override Axis?",
                 value = labels$y$override
               ),
-              conditionalPanel(
+              shiny::conditionalPanel(
                 condition = "input.override_axis_y", ns = session$ns,
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisMin_y"),
                   label = "Axis Min",
                   value = labels$y$min
                 ),
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisMax_y"),
                   label = "Axis Max",
                   value = labels$y$max
                 ),
-                numericInput(
+                shiny::numericInput(
                   inputId = session$ns("axisBreak_y"),
                   label = "Axis Breaks",
                   value = labels$y$breaks
@@ -359,30 +364,30 @@ plotServer <- function(input,
           )
         ),
         # title UI -------------------------------------------------------------
-        conditionalPanel(
+        shiny::conditionalPanel(
           condition = "input.RB_edit_render == 'title'", ns = session$ns,
-          fluidRow(
-            column(
+          shiny::fluidRow(
+            shiny::column(
               width = 6,
-              textInput(
+              shiny::textInput(
                 inputId = session$ns("newLabel_title"),
                 label = "Title Text",
                 value = labels$title$text
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("fontSize_title"),
                 label = "Font Size",
                 value = labels$title$size,
                 min = 8,
                 max = 36
               ),
-              selectInput(
+              shiny::selectInput(
                 inputId = session$ns("fontWeight_title"),
                 label = "Font Weight",
                 choices = c("plain", "bold", "italic", "bold.italic"),
                 selected = labels$title$weight
               ),
-              sliderInput(
+              shiny::sliderInput(
                 inputId = session$ns("axisPosition_title"),
                 label = "Position on main axis",
                 value = labels$title$axisPosition,
@@ -390,7 +395,7 @@ plotServer <- function(input,
                 max = 1,
                 step = 0.05
               ),
-              numericInput(
+              shiny::numericInput(
                 inputId = session$ns("axisPositionPadding_title"),
                 label = "Padding on Axis",
                 value = labels$title$axisPositionPadding,
@@ -401,12 +406,12 @@ plotServer <- function(input,
             )
           )
         ),
-        footer = actionButton(session$ns("update_label"), "Update"),
+        footer = shiny::actionButton(session$ns("update_label"), "Update"),
         easyClose = TRUE
       ))
   })
 
-  observeEvent(input$update_label, {
+  shiny::observeEvent(input$update_label, {
     labels$x$text.override <- TRUE
     labels$y$text.override <- TRUE
     labels$title$text.override <- TRUE
@@ -451,6 +456,6 @@ plotServer <- function(input,
 
     labels$title$axisPosition        <- input$axisPosition_title
     labels$title$axisPositionPadding <- input$axisPositionPadding_title
-    removeModal()
+    shiny::removeModal()
   })
 }

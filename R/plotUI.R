@@ -8,6 +8,8 @@
 #'
 #' @return A Shiny UI tag for the custom plot.
 #'
+#' @importFrom shiny NS tagList div plotOutput
+#'
 #' @examples
 #' \dontrun{
 #' library(shiny)
@@ -51,15 +53,15 @@
 #'
 #' @export
 plotUI <- function(id, height = 400) {
-  ns <- NS(id)
-  tagList(
-    div(
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::div(
       style = "position:relative;",
-      plotOutput(ns("plot"), height = height),
-      tags$style(type = "text/css",
+      shiny::plotOutput(ns("plot"), height = height),
+      shiny::tags$style(type = "text/css",
                  paste0("#", ns("plot"), " { cursor: default; }")),
       # Use the JavaScript function in your Shiny app
-      tags$script(HTML(
+      shiny::tags$script(HTML(
         sprintf(
           "$(document).ready(function() {
         var plotElement = document.getElementById('%s');

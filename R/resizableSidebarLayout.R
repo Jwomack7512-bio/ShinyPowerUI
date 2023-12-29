@@ -16,7 +16,7 @@
 #' @param barColor (optional) Allows customization of the toggle button's
 #'   background color.
 #' @param arrowSize (optional) Size of the arrow in the toggle button.
-#' @param hideBarByDefault (optional) Boolean indicating whether the sidebar
+#' @param hideBar (optional) Boolean indicating whether the sidebar
 #'   should be hidden by default.
 #'
 #' @return A Shiny UI layout with a resizable and collapsible sidebar.

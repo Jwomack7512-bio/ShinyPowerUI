@@ -9,9 +9,9 @@ a collapsible sidebar.}
 resizableSidebarLayout(
   sidebarContent,
   mainContent,
-  bgColorBtn = "#e9e9e9",
+  barColor = "#e9e9e9",
   arrowSize = "default",
-  hideBarByDefault = TRUE
+  hideBar = FALSE
 )
 }
 \arguments{
@@ -19,12 +19,12 @@ resizableSidebarLayout(
 
 \item{mainContent}{UI elements to be placed in the main content area.}
 
-\item{bgColorBtn}{(optional) Allows customization of the toggle button's
+\item{barColor}{(optional) Allows customization of the toggle button's
 background color.}
 
 \item{arrowSize}{(optional) Size of the arrow in the toggle button.}
 
-\item{hideBarByDefault}{(optional) Boolean indicating whether the sidebar
+\item{hideBar}{(optional) Boolean indicating whether the sidebar
 should be hidden by default.}
 }
 \value{
@@ -53,7 +53,7 @@ ui <- resizableSidebarLayout(
     shiny::tags$h3("Main Content"),
     plotOutput("plot")
   ),
-  bgColorBtn = "#3498db",
+  barColor = "#3498db",
   arrowSize = "large",
   hideBarByDefault = FALSE
 )
