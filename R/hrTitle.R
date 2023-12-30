@@ -7,6 +7,10 @@
 #' @param color Character string. The color of the horizontal line. Default is "grey".
 #' @param textColor Character string. The color of the title text. Default is "black".
 #' @param verticalPosition Character string. One of "top" or "inline" indicating the vertical position of the title with respect to the line. "top" positions the text above the line, while "inline" centers the text with the line. Default is "top".
+#' @param fontSize Character string. The font size of the title text. Default is "inherit".
+#' @param lineStyle Character string. One of "solid", "dashed", or "dotted" indicating the line style. Default is "solid".
+#' @param paddingAbove Character string. The amount of padding above the widget. Default is "10px".
+#' @param paddingBelow Character string. The amount of padding below the widget. Default is "10px".
 #'
 #' @return A \code{shiny.tagList} containing the styled horizontal line and title.
 #'
@@ -21,7 +25,8 @@
 #' ui <- fluidPage(
 #'   hrTitle("Centered Header"),
 #'   hrTitle("Left Header", "left"),
-#'   hrTitle("Inline Right Header", "right", verticalPosition = "inline")
+#'   hrTitle("Inline Right Header", "right", verticalPosition = "inline"),
+#'   hrTitle("My Title" ,fontSize = "18px", lineStyle = "dashed")
 #' )
 #'
 #' server <- function(input, output, session) {}
@@ -33,7 +38,11 @@ hrTitle <- function(textToShow,
                     position = "center",
                     color = "grey",
                     textColor = "black",
-                    verticalPosition = "top") {
+                    verticalPosition = "top",
+                    fontSize = "inherit",  # Default to inherit font size
+                    lineStyle = "solid",   # Default to solid line
+                    paddingAbove = "10px",  # Default padding above
+                    paddingBelow = "10px") {  # Default padding below
 
   position_class <- switch(position,
                            "left" = "left-aligned",
@@ -46,6 +55,12 @@ hrTitle <- function(textToShow,
                            "inline" = "inline-positioned",
                            "top-positioned")
 
+  line_style_class <- switch(lineStyle,
+                             "solid" = "solid-line",
+                             "dashed" = "dashed-line",
+                             "dotted" = "dotted-line",
+                             "solid-line")
+
   # CSS embedded within the function
   css <- "
   .header-line {
@@ -53,12 +68,23 @@ hrTitle <- function(textToShow,
       width: 100%;
       margin-bottom: 20px;
       height: 1px;
-      border-bottom: 1px solid;
   }
 
   .header-line span {
       background-color: white;
       padding: 0 10px;
+  }
+
+  .solid-line {
+      border-bottom: 1px solid;
+  }
+
+  .dashed-line {
+      border-bottom: 1px dashed;
+  }
+
+  .dotted-line {
+      border-bottom: 1px dotted;
   }
 
   .centered span {
@@ -97,10 +123,17 @@ hrTitle <- function(textToShow,
   shiny::tagList(
     shiny::tags$style(css),
     tags$div(
-      class = paste("header-line", position_class, vertical_class),
-      style = paste("border-color:", color, ";"),
+      class = paste("header-line",
+                    position_class,
+                    vertical_class,
+                    line_style_class),
+      style = paste("border-color:", color, ";",
+                    "font-size:", fontSize, ";",
+                    "padding-top:", paddingAbove, ";",
+                    "padding-bottom:", paddingBelow, ";"),
       tags$span(textToShow, style = paste("color:", textColor, ";"))
     )
   )
 }
+
 
