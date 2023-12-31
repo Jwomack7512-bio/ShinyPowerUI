@@ -244,3 +244,17 @@ hrTitle <- function(textToShow,
 }
 
 
+#TODO:
+# Inline isn't wokring with center.  This has to do with
+#   .centered span {
+# position: absolute;
+# left: 50%;
+# transform: translateX(-50%) !important;
+# }
+# By makeing translateX important it made it unable to be centered.  We need
+# to create different classes for each of positions left-top, center-top,
+# right-top, left-inline, center-inline, right-inline or something else
+#
+# TODO: Center-top text overlays line at random font-sizes.  Maybe an addition
+#  of z-index could fix this or perhaps we need to add padding between these
+#  text and line elements.
