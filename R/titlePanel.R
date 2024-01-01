@@ -38,11 +38,17 @@
 #' )
 #' }
 #' @export
-titlePanel <- function(..., title = NULL, bg_color = NULL,
-                       header_font = "Arial", header_weight = "normal",
-                       header_font_size = "18px", header_color = "grey",
-                       id = NULL, border_thickness = "1px",
-                       border_color = "lightgrey", border_type = "solid",
+titlePanel <- function(...,
+                       title = NULL,
+                       bg_color = NULL,
+                       header_font = "Arial",
+                       header_weight = "normal",
+                       header_font_size = "18px",
+                       header_color = "grey",
+                       id = NULL,
+                       border_thickness = "1px",
+                       border_color = "lightgrey",
+                       border_type = "solid",
                        margin_top = "20px") {
 
   # If no ID provided, generate a unique ID using NS and timestamp
