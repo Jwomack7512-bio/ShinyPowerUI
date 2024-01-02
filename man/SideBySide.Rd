@@ -13,6 +13,41 @@ SideBySide(..., shrinkWidgets = FALSE)
 }
 \value{
 Display widgets side by side.
+
+\dontrun{
+library(shiny)
+
+Example 1: Display two numericInputs side by side
+ui <- fluidPage(
+  SideBySide(
+    numericInput("num1", "Numeric Input 1", 1),
+    numericInput("num2", "Numeric Input 2", 2)
+  )
+)
+shinyApp(ui, function(input, output) {})
+
+shinyApp(ui, function(input, output) {})
+
+Example 2: Display three actionButtons side by side with resized width
+ui <- fluidPage(
+  SideBySide(
+    actionButton("btn1", "Button 1"),
+    actionButton("btn2", "Button 2"),
+    actionButton("btn3", "Button 3"),
+    shrinkWidgets = F
+  )
+)
+shinyApp(ui, function(input, output) {})
+
+Example 3: Displaying button next to text input
+ui <- fluidPage(
+  SideBySide(
+    textInput("ti1", "Text"),
+    div(style = "margin-top: 25px;", actionButton("btn4", "Store"))
+  )
+)
+shinyApp(ui, function(input, output) {})
+}
 }
 \description{
 Displays shiny widgets side by side.

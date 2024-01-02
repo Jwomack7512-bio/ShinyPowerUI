@@ -8,7 +8,6 @@
 #'
 #' @return Display widgets side by side.
 #'
-#' @export
 #' \dontrun{
 #' library(shiny)
 #'
@@ -43,7 +42,8 @@
 #' )
 #' shinyApp(ui, function(input, output) {})
 #' }
-
+#'
+#' @export
 SideBySide <- function(..., shrinkWidgets = FALSE) {
   widgets <- list(...)
   n_widgets <- length(widgets)
