@@ -9,7 +9,11 @@ hrTitle(
   position = "center",
   color = "grey",
   textColor = "black",
-  verticalPosition = "top"
+  verticalPosition = "top",
+  fontSize = "inherit",
+  lineStyle = "solid",
+  marginTop = "20px",
+  marginBottom = "20px"
 )
 }
 \arguments{
@@ -22,6 +26,14 @@ hrTitle(
 \item{textColor}{Character string. The color of the title text. Default is "black".}
 
 \item{verticalPosition}{Character string. One of "top" or "inline" indicating the vertical position of the title with respect to the line. "top" positions the text above the line, while "inline" centers the text with the line. Default is "top".}
+
+\item{fontSize}{Character string. The font size of the title text. Default is "inherit".}
+
+\item{lineStyle}{Character string. One of "solid", "dashed", or "dotted" indicating the line style. Default is "solid".}
+
+\item{marginTop}{Margin applied above widget for spacing. Default 20px.}
+
+\item{margineBottom}{Margin applied below widget for spacing. Default 20px.}
 }
 \value{
 A \code{shiny.tagList} containing the styled horizontal line and title.
@@ -37,10 +49,118 @@ library(shiny)
 ui <- fluidPage(
   hrTitle("Centered Header"),
   hrTitle("Left Header", "left"),
-  hrTitle("Inline Right Header", "right", verticalPosition = "inline")
+  hrTitle("Inline Right Header", "right", verticalPosition = "inline"),
+  hrTitle("My Title" , lineStyle = "dashed", verticalPosition = "inline",
+          fontSize = "20px"),
+
+  hrTitle("My Title" ,
+          lineStyle = "dashed",
+          verticalPosition = "inline"),
+  br(),
+  hr(),
+  fluidRow(
+    column(
+      width = 4,
+      tableLayout(
+        textInput(
+          inputId = "tab8_TI_hrtitle_message",
+          label = "Message",
+          value = "Type Message Here"
+        ),
+        colourpicker::colourInput(
+          inputId = "tab8_color_input_line",
+          label = "Line Color",
+          value = "grey",
+          allowTransparent = TRUE
+        ),
+        colourpicker::colourInput(
+          inputId = "tab8_color_input_text",
+          label = "Text Color",
+          value = "Blue",
+          allowTransparent = TRUE
+        ),
+        selectInput(
+          inputId = "tab8_SI_position_horizontal",
+          label = "Horizontal Position",
+          choices = c("left", "center", "right")
+        ),
+        selectInput(
+          inputId = "tab8_SI_position_vertical",
+          label = "Vertical Position",
+          choices = c("top", "inline")
+        ),
+        numericInput(
+          inputId = "tab8_NI_font_size",
+          label = "Font Size",
+          value = 14,
+          min = 4,
+          max = 30
+        ),
+        selectInput(
+          inputId = "tab8_SI_line_style",
+          label = "Line Style",
+          choices = c("solid", "dashed", "dotted")
+        ),
+        numericInput(
+          inputId = "tab8_NI_margin_top",
+          label = "Margin Top",
+          value = 20
+        ),
+        numericInput(
+          inputId = "tab8_NI_margin_bottom",
+          label = "Margin Bottom",
+          value = 20
+        ),
+        checkboxInput(
+          inputId = "tab8_CB_obj_above_or_below",
+          label = "Object Above and below",
+          value = FALSE
+        )
+      )
+    ),
+    column(
+      width = 8,
+      br(),
+      br(),
+      br(),
+      conditionalPanel(
+        condition = "input.tab8_CB_obj_above_or_below",
+        textInput(
+          inputId = "tab8_TI_obj_above",
+          label = "Test Above",
+          value = ""
+        )
+     ),
+     uiOutput(outputId = "uiOut_render_hrtitle"),
+     conditionalPanel(
+        condition = "input.tab8_CB_obj_above_or_below",
+        textInput(
+          inputId = "tab8_TI_obj_below",
+          label = "Test Below",
+          value = ""
+        )
+      )
+    )
+  )
 )
 
-server <- function(input, output, session) {}
+server <- function(input, output, session) {
+
+  output$uiOut_render_hrtitle <- renderUI({
+
+    hrTitle(
+      textToShow = input$tab8_TI_hrtitle_message,
+      position = input$tab8_SI_position_horizontal,
+      color = input$tab8_color_input_line,
+      textColor = input$tab8_color_input_text,
+      verticalPosition = input$tab8_SI_position_vertical,
+      fontSize = paste0(as.character(input$tab8_NI_font_size), "px"),
+      lineStyle = input$tab8_SI_line_style,
+      marginTop = paste0(as.character(input$tab8_NI_margin_top), "px"),
+      marginBottom = paste0(as.character(input$tab8_NI_margin_bottom), "px"),
+    )
+  })
+}
 
 shinyApp(ui, server)
 }
