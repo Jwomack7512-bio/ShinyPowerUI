@@ -1,3 +1,4 @@
+# Module server function
 #' Server function to create a show/hide code button
 #'
 #' This function sets up the server-side logic for a Shiny app to display a
@@ -38,7 +39,7 @@ showCodeButtonServer <- function(input,
   # Update button label based on the state
   observe({
     label <- if (button_state()) "Hide Code" else "Show Code"
-    shiny::updateActionButton(session, "show_code_button", label = label)
+    shinyjs::updateActionButton(session, "show_code_button", label = label)
   })
 }
 

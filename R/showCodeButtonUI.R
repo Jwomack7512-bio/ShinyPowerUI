@@ -22,6 +22,7 @@ showCodeButtonUI <- function(id,
   shiny::fluidRow(
     shiny::column(
       width = 12,
+      shinyjs::useShinyjs(),  # Import the shinyjs library
       # Button to show/hide code
       shiny::actionButton(ns("show_code_button"),
                           label = shiny::HTML(paste0("</> Show Code")),
