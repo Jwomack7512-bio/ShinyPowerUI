@@ -8,7 +8,8 @@ showCodeButtonUI(
   id,
   hyperlink_color = "blue",
   background_color = "transparent",
-  border_style = "none"
+  border_style = "none",
+  button_alignment = "left"
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ showCodeButtonUI(
 \item{background_color}{Background color of the button (default: "transparent").}
 
 \item{border_style}{CSS style for the button border (default: "none").}
+
+\item{button_alignment}{where in column to align button (left, center, right)}
 }
 \value{
 A Shiny UI element.

@@ -6,3 +6,8 @@ titlePanel from pahMOdels
 
 we learned how to play with the translate fxn to move title around, apply to titlepanel and hrtitle.
 title_align but have custom translate_x, translate_y to override.
+
+Need to change "titlePanel name as it conflicts with base shiny"
+
+
+set minHeight to titlePanel
