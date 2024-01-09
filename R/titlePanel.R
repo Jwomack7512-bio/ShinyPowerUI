@@ -58,9 +58,17 @@ titlePanel <- function(...,
   # If no ID provided, generate a unique ID using NS and timestamp
   if (is.null(id)) {
     id <- paste0("custom-panel-", format(Sys.time(), "%Y%m%d%H%M%OS"))
+    ns_id <- shiny::NS(id)  # Namespaced ID
+    # Height styling for auto-generated ID
+    height_css <- if (!is.null(height)) {
+      paste0("height: ", height, ";")
+    } else {
+      "height: auto;"
+    }
+  } else {
+    ns_id <- shiny::NS(id)  # Namespaced ID
+    height_css <- ""
   }
-
-  ns_id <- shiny::NS(id)  # Namespaced ID
 
   # Widgets to be included in the panel
   widgets <- list(...)
@@ -77,13 +85,6 @@ titlePanel <- function(...,
     paste0("background-color: ", bg_color, ";")
   } else {
     "background-color: transparent;"
-  }
-
-  # Height styling
-  height_css <- if (!is.null(height)) {
-    paste0("height: ", height, ";")
-  } else {
-    "height: auto;"
   }
 
   # Create and return the custom panel with its styles
